@@ -1,0 +1,6 @@
+{
+  "name": "sideshow-rest",
+  "description": "Backend for Sideshow",
+  "repository": "https://github.com/jnupponen/sideshow-rest",
+  "keywords": ["java", "location", "gps"]
+}

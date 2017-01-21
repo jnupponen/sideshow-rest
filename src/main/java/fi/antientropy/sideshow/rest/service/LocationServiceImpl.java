@@ -5,8 +5,8 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import fi.antientropy.sideshow.rest.domain.SharedLocation;
 import fi.antientropy.sideshow.rest.domain.PrivateLocation;
+import fi.antientropy.sideshow.rest.domain.SharedLocation;
 
 @Component("locationService")
 @Transactional
@@ -47,5 +47,17 @@ class LocationServiceImpl implements LocationService {
         return null;
     }
 
+    @Override
+    public Boolean checkAccess(String id, String token) {
+        if(id == null || token == null) {
+            return false;
+        }
+        else {
+            return locationRepository.findByIdAllIgnoringCase(id)
+                .filter(location -> id.equals(location.getId()))
+                .filter(location -> token.equals(location.getSecret()))
+                .isPresent();
+        }
+    }
 
 }

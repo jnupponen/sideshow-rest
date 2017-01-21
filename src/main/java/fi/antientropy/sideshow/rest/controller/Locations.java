@@ -1,5 +1,7 @@
 package fi.antientropy.sideshow.rest.controller;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +20,25 @@ public class Locations {
     @Autowired
     private LocationService locationService;
 
+    @RequestMapping(value = "/api/example", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<?> getExample() {
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+        try {
+            Location location = new Location();
+            location.setId("example");
+            location.setLocationDate(new Date());
+            location.setOwnerSecret("abc");
+            location.setSecret("efg");
+            return new ResponseEntity<Location>(location, HttpStatus.OK);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<String>("Unable to fetch location", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @RequestMapping(value = "/api/locations/{id}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<?> getLocation(@PathVariable String id) {
 

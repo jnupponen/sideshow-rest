@@ -2,6 +2,7 @@ package fi.antientropy.sideshow.rest.service;
 
 import javax.transaction.Transactional;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -55,7 +56,7 @@ class LocationServiceImpl implements LocationService {
         else {
             return locationRepository.findByIdAllIgnoringCase(id)
                 .filter(location -> id.equals(location.getId()))
-                .filter(location -> token.equals(location.getSecret()))
+                .filter(location -> DigestUtils.sha512Hex(token).equals(location.getSecret()))
                 .isPresent();
         }
     }

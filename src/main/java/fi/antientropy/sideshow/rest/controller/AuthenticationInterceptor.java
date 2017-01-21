@@ -18,8 +18,8 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
     @Autowired
     private LocationService locationService;
 
-    // /api/locations/<id> ID is at location 2
-    private static final Integer ID = 2;
+    // /api/locations/<id> ID is at location 3
+    private static final Integer ID = 3;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {

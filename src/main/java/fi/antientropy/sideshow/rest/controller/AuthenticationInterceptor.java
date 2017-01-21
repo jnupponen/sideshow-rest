@@ -1,5 +1,7 @@
 package fi.antientropy.sideshow.rest.controller;
 
+import java.util.Optional;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,6 +16,7 @@ import fi.antientropy.sideshow.rest.service.LocationService;
 public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
 
     private static final String TOKEN = "token";
+    private static final String OWNER_TOKEN = "owner_token";
 
     @Autowired
     private LocationService locationService;
@@ -26,13 +29,21 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
 
         try {
             String token = request.getHeader(TOKEN);
+            String ownerToken = request.getHeader(OWNER_TOKEN);
 
             String[] parts = request.getRequestURI().split("/");
             // Will throw exception if outofbounds.
             String id = parts[ID];
 
-            if(locationService.checkAccess(id, token)) {
-                return true;
+            if("PUT".equals(request.getMethod())) {
+                return Optional.of(locationService.checkModifyAccess(id, token, ownerToken))
+                        .filter(access -> access)
+                        .orElseThrow(() ->  new Exception("Unauthorized"));
+            }
+            else if("GET".equals(request.getMethod())) {
+                return Optional.of(locationService.checkReadAccess(id, token))
+                        .filter(access -> access)
+                        .orElseThrow(() ->  new Exception("Unauthorized"));
             }
             else {
                 throw new Exception("Unauthorized");

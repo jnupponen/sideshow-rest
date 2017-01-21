@@ -13,6 +13,8 @@ public interface LocationService {
 
     public SharedLocation deleteLocation(String id) throws Exception;
 
-    public Boolean checkAccess(String id, String token);
+    public Boolean checkReadAccess(String id, String token);
+
+    public Boolean checkModifyAccess(String id, String token, String ownerToken);
 
 }

@@ -53,7 +53,7 @@ class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public Boolean checkAccess(String id, String token) {
+    public Boolean checkReadAccess(String id, String token) {
         if(id == null || token == null) {
             return false;
         }
@@ -61,6 +61,20 @@ class LocationServiceImpl implements LocationService {
             return locationRepository.findById(id)
                 .filter(location -> id.equals(location.getId()))
                 .filter(location -> DigestUtils.sha512Hex(token).equals(location.getSecret()))
+                .isPresent();
+        }
+    }
+
+
+    @Override
+    public Boolean checkModifyAccess(String id, String token, String ownerToken) {
+        if(id == null || token == null || ownerToken == null) {
+            return false;
+        }
+        else {
+            return locationRepository.findById(id)
+                .filter(location -> id.equals(location.getId()))
+                .filter(location -> DigestUtils.sha512Hex(ownerToken).equals(location.getOwnerSecret()))
                 .isPresent();
         }
     }

@@ -79,6 +79,7 @@ public class Locations {
     public ResponseEntity<?> updateLocation(@PathVariable String id, @RequestBody SharedLocation location) {
 
         try {
+            location.setId(id);
             return new ResponseEntity<SharedLocation>(locationService.updateLocation(location), HttpStatus.OK);
         }
         catch (Exception e) {

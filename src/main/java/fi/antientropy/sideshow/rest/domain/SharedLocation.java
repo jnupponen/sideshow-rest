@@ -2,10 +2,6 @@ package fi.antientropy.sideshow.rest.domain;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-
 import org.joda.time.DateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -13,23 +9,22 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-@Entity(name = "location")
 @JsonInclude(Include.NON_NULL)
 public class SharedLocation {
 
-    @Id
+    public SharedLocation() {}
+    public SharedLocation(PrivateLocation privateLocation) {
+        this.id = privateLocation.getId();
+        this.location = privateLocation.getLocation();
+        this.locationDate = privateLocation.getLocationDate();
+    }
+
     @JsonProperty("id")
     private String id;
 
-    @Column(name = "location")
     @JsonProperty("location")
     private String location;
 
-    @JsonIgnore
-    @Column(name = "secret")
-    private String secret;
-
-    @Column(name = "location_date")
     private Date locationDate;
 
     public String getId() {
@@ -46,14 +41,6 @@ public class SharedLocation {
 
     public void setLocation(String location) {
         this.location = location;
-    }
-
-    public String getSecret() {
-        return secret;
-    }
-
-    public void setSecret(String secret) {
-        this.secret = secret;
     }
 
     @JsonIgnore
@@ -74,5 +61,7 @@ public class SharedLocation {
     public String getOutputDateTime() {
         return new DateTime(locationDate).toString();
     }
-
+    public void setOutputDateTime(String dateTime) {
+        this.locationDate = DateTime.parse(dateTime).toDate();
+    }
 }

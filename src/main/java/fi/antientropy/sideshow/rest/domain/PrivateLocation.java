@@ -12,13 +12,18 @@ import javax.persistence.TemporalType;
 import org.joda.time.DateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity(name = "location")
-@JsonInclude(Include.NON_NULL)
 public class PrivateLocation {
+
+    public PrivateLocation() {}
+
+    public PrivateLocation(SharedLocation shared) {
+        this.id = shared.getId();
+        this.location = shared.getLocation();
+        this.locationDate = shared.getLocationDate();
+    }
 
     @Id
     @JsonProperty("id")

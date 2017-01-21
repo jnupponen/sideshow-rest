@@ -1,5 +1,7 @@
 package fi.antientropy.sideshow.rest.service;
 
+import java.util.Optional;
+
 import javax.transaction.Transactional;
 
 import org.apache.commons.codec.digest.DigestUtils;
@@ -21,29 +23,31 @@ class LocationServiceImpl implements LocationService {
     private LocationRepository locationRepository;
 
     @Override
-    public SharedLocation getLocation(String id) throws Exception {
-        return locationRepository.findByIdAllIgnoringCase(id).get();
+    public SharedLocation getSharedLocation(String id) throws Exception {
+        return locationRepository.findById(id)
+                .map(SharedLocation::new)
+                .orElseThrow(() -> new Exception("not found"));
+    }
+
+
+    @Override
+    public SharedLocation createLocation(PrivateLocation location) throws Exception {
+        return new SharedLocation(locationRepository.save(location));
     }
 
     @Override
-    public PrivateLocation postLocation(PrivateLocation location) throws Exception {
-        return locationRepository.save(location);
+    public SharedLocation updateLocation(SharedLocation sharedLocation) throws Exception {
+       Optional<PrivateLocation> old = locationRepository.findById(sharedLocation.getId());
+       PrivateLocation oldLocation = old.orElseThrow(() -> new Exception("Not found"));
+
+       oldLocation.setLocation(sharedLocation.getLocation());
+       oldLocation.setLocationDate(sharedLocation.getLocationDate());
+
+       return new SharedLocation(locationRepository.save(oldLocation));
     }
 
     @Override
-    public PrivateLocation createLocation(PrivateLocation location) throws Exception {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public PrivateLocation updateLocation(String id, PrivateLocation event) throws Exception {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public PrivateLocation deleteLocation(String id) throws Exception {
+    public SharedLocation deleteLocation(String id) throws Exception {
         // TODO Auto-generated method stub
         return null;
     }
@@ -54,7 +58,7 @@ class LocationServiceImpl implements LocationService {
             return false;
         }
         else {
-            return locationRepository.findByIdAllIgnoringCase(id)
+            return locationRepository.findById(id)
                 .filter(location -> id.equals(location.getId()))
                 .filter(location -> DigestUtils.sha512Hex(token).equals(location.getSecret()))
                 .isPresent();

@@ -1,48 +1,39 @@
 package fi.antientropy.sideshow.rest.domain;
 
 import java.util.Date;
-import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import org.joda.time.DateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@Entity
+@Entity(name = "location")
 @JsonInclude(Include.NON_NULL)
-public class Location {
+public class SharedLocation {
 
     @Id
+    @JsonProperty("id")
     private String id;
 
-    @Column(name = "location", nullable = false)
+    @Column(name = "location")
+    @JsonProperty("location")
     private String location;
 
-    @Column(name = "secret", nullable = true)
+    @JsonIgnore
+    @Column(name = "secret")
     private String secret;
 
-    @Column(name = "owner_secret", nullable = true)
-    private String ownerSecret;
-
-    @Column(name = "location_date", nullable = true)
-    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "location_date")
     private Date locationDate;
 
     public String getId() {
         return id;
-    }
-
-    public String generateId() {
-        String generated = UUID.randomUUID().toString();
-        this.id = generated;
-        return generated;
     }
 
     public void setId(String id) {
@@ -65,14 +56,6 @@ public class Location {
         this.secret = secret;
     }
 
-    public String getOwnerSecret() {
-        return ownerSecret;
-    }
-
-    public void setOwnerSecret(String ownerSecret) {
-        this.ownerSecret = ownerSecret;
-    }
-
     @JsonIgnore
     public Date getLocationDate() {
         return locationDate;
@@ -87,6 +70,7 @@ public class Location {
         return new DateTime(locationDate);
     }
 
+    @JsonProperty("modified_date")
     public String getOutputDateTime() {
         return new DateTime(locationDate).toString();
     }

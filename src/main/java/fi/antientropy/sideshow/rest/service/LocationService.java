@@ -1,15 +1,18 @@
 package fi.antientropy.sideshow.rest.service;
 
-import fi.antientropy.sideshow.rest.domain.Location;
+import fi.antientropy.sideshow.rest.domain.SharedLocation;
+import fi.antientropy.sideshow.rest.domain.PrivateLocation;
 
 public interface LocationService {
 
-    Location getLocation(String id) throws Exception;
+    SharedLocation getLocation(String id) throws Exception;
 
-    Location createLocation(Location location) throws Exception;
+    PrivateLocation postLocation(PrivateLocation location) throws Exception;
 
-    Location updateLocation(String id, Location event) throws Exception;
+    PrivateLocation createLocation(PrivateLocation location) throws Exception;
 
-    Location deleteLocation(String id) throws Exception;
+    PrivateLocation updateLocation(String id, PrivateLocation event) throws Exception;
+
+    PrivateLocation deleteLocation(String id) throws Exception;
 
 }

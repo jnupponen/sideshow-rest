@@ -4,10 +4,11 @@ import java.util.Optional;
 
 import org.springframework.data.repository.CrudRepository;
 
-import fi.antientropy.sideshow.rest.domain.Location;
+import fi.antientropy.sideshow.rest.domain.SharedLocation;
+import fi.antientropy.sideshow.rest.domain.PrivateLocation;
 
-public interface LocationRepository extends CrudRepository<Location, Long> {
+public interface LocationRepository extends CrudRepository<PrivateLocation, Long> {
 
-    Optional<Location> findByIdAllIgnoringCase(String id);
+    Optional<SharedLocation> findByIdAllIgnoringCase(String id);
 
 }

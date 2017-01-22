@@ -1,8 +1,10 @@
 package fi.antientropy.sideshow.rest.controller;
 
 import java.util.Date;
+import java.util.Optional;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,6 +64,7 @@ public class Locations {
             @RequestHeader("owner_token") String ownerToken) {
 
         try {
+            location.setLocationDate(Optional.ofNullable(location.getDateTime().toDate()).orElse(DateTime.now().toDate()));
             PrivateLocation privateLocation = new PrivateLocation(location);
             privateLocation.setId(privateLocation.generateId());
             privateLocation.setOwnerSecret(DigestUtils.sha512Hex(ownerToken));
@@ -80,6 +83,7 @@ public class Locations {
 
         try {
             location.setId(id);
+            location.setLocationDate(Optional.ofNullable(location.getDateTime().toDate()).orElse(DateTime.now().toDate()));
             return new ResponseEntity<SharedLocation>(locationService.updateLocation(location), HttpStatus.OK);
         }
         catch (Exception e) {
